@@ -54,6 +54,11 @@ export function setStatusData(data) {
   } else {
     localStorage.removeItem('docs_link');
   }
+  if (data.ai_use_link) {
+    localStorage.setItem('ai_use_link', data.ai_use_link);
+  } else {
+    localStorage.removeItem('ai_use_link');
+  }
 }
 
 export function setUserData(data) {

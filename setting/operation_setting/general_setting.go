@@ -12,6 +12,7 @@ const (
 
 type GeneralSetting struct {
 	DocsLink            string `json:"docs_link"`
+	AiUseLink           string `json:"ai_use_link"`
 	PingIntervalEnabled bool   `json:"ping_interval_enabled"`
 	PingIntervalSeconds int    `json:"ping_interval_seconds"`
 	// 当前站点额度展示类型：USD / CNY / TOKENS

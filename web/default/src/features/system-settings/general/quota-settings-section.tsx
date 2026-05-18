@@ -48,6 +48,7 @@ const quotaSchema = z.object({
   TopUpLink: z.string(),
   general_setting: z.object({
     docs_link: z.string(),
+    ai_use_link: z.string(),
   }),
   quota_setting: z.object({
     enable_free_model_pre_consume: z.boolean(),
@@ -269,6 +270,26 @@ export function QuotaSettingsSection({
                 </FormControl>
                 <FormDescription>
                   {t('Link to your documentation site')}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='general_setting.ai_use_link'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('AI Creation Link')}</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t('https://example.com/ai-create')}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  {t('External link for the AI Creation top navigation item')}
                 </FormDescription>
                 <FormMessage />
               </FormItem>

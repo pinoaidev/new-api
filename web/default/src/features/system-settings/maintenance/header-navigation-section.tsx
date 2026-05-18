@@ -48,6 +48,7 @@ const headerNavSchema = z.object({
   rankingsEnabled: z.boolean(),
   rankingsRequireAuth: z.boolean(),
   docs: z.boolean(),
+  ai_creation: z.boolean(),
   about: z.boolean(),
 })
 
@@ -83,6 +84,10 @@ const toFormValues = (config: HeaderNavModulesConfig): HeaderNavFormValues => ({
       : Boolean(config.rankings.requireAuth),
   docs:
     config.docs === undefined ? HEADER_NAV_DEFAULT.docs : Boolean(config.docs),
+  ai_creation:
+    config.ai_creation === undefined
+      ? HEADER_NAV_DEFAULT.ai_creation
+      : Boolean(config.ai_creation),
   about:
     config.about === undefined
       ? HEADER_NAV_DEFAULT.about
@@ -112,6 +117,7 @@ export function HeaderNavigationSection({
       home: values.home,
       console: values.console,
       docs: values.docs,
+      ai_creation: values.ai_creation,
       about: values.about,
       pricing: {
         ...(config.pricing ?? HEADER_NAV_DEFAULT.pricing),
@@ -159,6 +165,13 @@ export function HeaderNavigationSection({
       key: 'docs',
       title: t('Docs'),
       description: t('Documentation or external knowledge base.'),
+    },
+    {
+      key: 'ai_creation',
+      title: t('AI Creation'),
+      description: t(
+        'External AI creation tool link in the top navigation. Requires AI Creation Link in quota settings.'
+      ),
     },
     {
       key: 'about',

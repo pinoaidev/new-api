@@ -35,6 +35,7 @@ const DEFAULT_HEADER_NAV_MODULES = {
   pricing: { enabled: true, requireAuth: false },
   rankings: { enabled: true, requireAuth: false },
   docs: true,
+  ai_creation: true,
   about: true,
 }
 
@@ -100,6 +101,7 @@ function parseHeaderNavModules(
  *   pricing: { enabled: true, requireAuth: false },
  *   rankings: { enabled: true, requireAuth: false },
  *   docs: true,
+ *   ai_creation: true,
  *   about: true
  * }
  */
@@ -115,6 +117,7 @@ export function useTopNavLinks(): TopNavLink[] {
 
   // Documentation link (may be external)
   const docsLink: string | undefined = status?.docs_link as string | undefined
+  const aiUseLink: string | undefined = status?.ai_use_link as string | undefined
 
   const isAuthed = !!auth?.user
 
@@ -151,6 +154,11 @@ export function useTopNavLinks(): TopNavLink[] {
     } else {
       links.push({ title: t('Docs'), href: '/docs' })
     }
+  }
+
+  // AI Creation (external link from general_setting.ai_use_link)
+  if (modules?.ai_creation !== false && aiUseLink?.trim()) {
+    links.push({ title: t('AI Creation'), href: aiUseLink.trim(), external: true })
   }
 
   // About
