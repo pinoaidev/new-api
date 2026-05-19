@@ -81,14 +81,7 @@ function ProjectAttribution(props: { currentYear: number }) {
     <div className='text-muted-foreground/45 text-center text-xs sm:text-right'>
       <span className='text-muted-foreground/45'>
         &copy; {props.currentYear}{' '}
-        <a
-          href='https://github.com/QuantumNous/new-api'
-          target='_blank'
-          rel='noopener noreferrer'
-          className='text-foreground/70 hover:text-foreground font-medium transition-colors'
-        >
-          {t('New API')}
-        </a>
+          {t('BelloGelato')}
         . {t(NEW_API_FOOTER_ATTRIBUTION_KEY)}
       </span>
     </div>
