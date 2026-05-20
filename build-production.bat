@@ -2,11 +2,11 @@
 setlocal
 
 REM 提示用户输入版本号，若直接回车则 version 为空
-set /p version="Please enter version number (default: 1.0.1): "
+set /p version="Please enter version number (default: 1.2.0): "
 
-REM 如果用户输入的版本为空，默认设置为 1.0.1
+REM 如果用户输入的版本为空，默认设置为 1.2.0
 if "%version%"=="" (
-    set version=1.0.1
+    set version=1.2.0
 )
 
 echo.
