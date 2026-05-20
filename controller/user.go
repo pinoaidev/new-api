@@ -376,6 +376,24 @@ func GetAffCode(c *gin.Context) {
 	return
 }
 
+func GetUserSession(c *gin.Context) {
+	sessionCookie, err := c.Cookie("session")
+	if err != nil || sessionCookie == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data": gin.H{
+			"session": sessionCookie,
+		},
+	})
+}
+
 func GetSelf(c *gin.Context) {
 	id := c.GetInt("id")
 	userRole := c.GetInt("role")

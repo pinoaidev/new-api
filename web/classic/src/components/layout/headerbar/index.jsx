@@ -68,6 +68,7 @@ const HeaderBar = ({ onMobileMenuToggle, drawerOpen }) => {
     docsLink,
     aiUseLink,
     headerNavModules,
+    !!userState?.user,
   );
 
   return (

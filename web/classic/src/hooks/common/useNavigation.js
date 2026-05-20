@@ -17,9 +17,38 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  appendSessionQueryToUrl,
+  getPageSessionValue,
+  resolvePageSessionValue,
+} from '../../helpers/sessionLink';
 
-export const useNavigation = (t, docsLink, aiUseLink, headerNavModules) => {
+export const useNavigation = (t, docsLink, aiUseLink, headerNavModules, isAuthed) => {
+  const [sessionValue, setSessionValue] = useState(() => getPageSessionValue());
+
+  useEffect(() => {
+    if (!isAuthed) {
+      setSessionValue(getPageSessionValue());
+      return undefined;
+    }
+    let cancelled = false;
+    void resolvePageSessionValue().then((value) => {
+      if (!cancelled) {
+        setSessionValue(value);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthed]);
+
+  const aiCreationHref = useMemo(() => {
+    const base = aiUseLink?.trim();
+    if (!base) return undefined;
+    return appendSessionQueryToUrl(base, sessionValue);
+  }, [aiUseLink, sessionValue]);
+
   const mainNavLinks = useMemo(() => {
     // 默认配置，如果没有传入配置则显示所有模块
     const defaultModules = {
@@ -60,13 +89,13 @@ export const useNavigation = (t, docsLink, aiUseLink, headerNavModules) => {
             },
           ]
         : []),
-      ...(aiUseLink?.trim()
+      ...(aiCreationHref
         ? [
             {
               text: t('AI创作'),
               itemKey: 'aiCreation',
               isExternal: true,
-              externalLink: aiUseLink.trim(),
+              externalLink: aiCreationHref,
             },
           ]
         : []),
@@ -83,7 +112,7 @@ export const useNavigation = (t, docsLink, aiUseLink, headerNavModules) => {
         return docsLink && modules.docs;
       }
       if (link.itemKey === 'aiCreation') {
-        return !!aiUseLink?.trim() && modules.ai_creation !== false;
+        return !!aiCreationHref && modules.ai_creation !== false;
       }
       if (link.itemKey === 'pricing') {
         // 支持新的pricing配置格式
@@ -93,7 +122,7 @@ export const useNavigation = (t, docsLink, aiUseLink, headerNavModules) => {
       }
       return modules[link.itemKey] === true;
     });
-  }, [t, docsLink, aiUseLink, headerNavModules]);
+  }, [t, docsLink, aiCreationHref, headerNavModules]);
 
   return {
     mainNavLinks,

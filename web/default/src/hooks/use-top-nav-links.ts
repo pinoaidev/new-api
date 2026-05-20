@@ -16,10 +16,15 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '@/stores/auth-store'
 import { useStatus } from '@/hooks/use-status'
+import {
+  appendSessionQueryToUrl,
+  resolvePageSessionValue,
+} from '@/lib/session-link'
+import { getPageSessionValue } from '@/lib/url'
 
 export type TopNavLink = {
   title: string
@@ -121,6 +126,32 @@ export function useTopNavLinks(): TopNavLink[] {
 
   const isAuthed = !!auth?.user
 
+  const [sessionValue, setSessionValue] = useState<string | undefined>(() =>
+    getPageSessionValue()
+  )
+
+  useEffect(() => {
+    if (!isAuthed) {
+      setSessionValue(getPageSessionValue())
+      return
+    }
+    let cancelled = false
+    void resolvePageSessionValue().then((value) => {
+      if (!cancelled) {
+        setSessionValue(value)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [isAuthed])
+
+  const aiCreationHref = useMemo(() => {
+    const base = aiUseLink?.trim()
+    if (!base) return undefined
+    return appendSessionQueryToUrl(base, sessionValue)
+  }, [aiUseLink, sessionValue])
+
   const links: TopNavLink[] = []
 
   // Home
@@ -157,8 +188,8 @@ export function useTopNavLinks(): TopNavLink[] {
   }
 
   // AI Creation (external link from general_setting.ai_use_link)
-  if (modules?.ai_creation !== false && aiUseLink?.trim()) {
-    links.push({ title: t('AI Creation'), href: aiUseLink.trim(), external: true })
+  if (modules?.ai_creation !== false && aiCreationHref) {
+    links.push({ title: t('AI Creation'), href: aiCreationHref, external: true })
   }
 
   // About
