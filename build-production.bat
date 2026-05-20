@@ -21,11 +21,11 @@ REM 设置 tar 包保存目录（当前脚本所在目录下的 docker_images �
 
 REM --- 第二步：build并保存 pino-ai-new-api 镜像 ---
 echo [2/3] Building and saving pino-ai-new-api image...
-docker build -t %REGISTRY%/pino-ai-new-api:t_%version% -f Dockerfile .
+docker build -t %REGISTRY%/pino-ai-new-api:%version% -f Dockerfile .
 if %errorlevel% neq 0 goto :error
 
 REM --- 第三步：推送镜像
-docker push %REGISTRY%/pino-ai-new-api:t_%version%
+docker push %REGISTRY%/pino-ai-new-api:%version%
 if %errorlevel% neq 0 goto :error
 
 echo pino-ai-new-api image built
